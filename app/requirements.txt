@@ -1,0 +1,15 @@
+# core libraries
+pandas==2.2.3
+python-dotenv==1.0.1
+
+# langchain libraries for LLM interaction
+langchain-core==0.3.22
+langchain-huggingface==0.1.2
+langchain-openai==0.2.11
+
+# langgraph for agentic graphs
+langgraph==0.2.56
+
+# libraries for interaction with financial APIs
+ta==0.11.0
+yfinance==0.2.52
