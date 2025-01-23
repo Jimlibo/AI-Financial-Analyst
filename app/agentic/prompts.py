@@ -5,7 +5,7 @@ TECHNICAL_ANALYST_PROMPT = ChatPromptTemplate.from_messages(
         (
             "system",
              """
-            You are a technical analyst specializing in evaluating company (whose ticker symbol is {stock}) performance
+            You are a technical analyst specializing in evaluating company (whose ticker symbol is {stock_name}) performance
             based on stock prices, technical indicators, and financial metrics. Your task is to provide a comprehensive
             summary of the fundamental analysis for a given stock.
 
