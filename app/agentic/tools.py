@@ -12,14 +12,18 @@ from ta.momentum import RSIIndicator, StochasticOscillator
 from ta.trend import MACD
 from ta.volume import volume_weighted_average_price
 
+import serpapi
+from dotenv import load_dotenv
+load_dotenv()
+
 ######## TECHNICAL AGENT TOOLS ########
 @tool("get_stock_prices")
-def get_stock_prices(ticker: str) -> Union[Dict, str]:
-    """Fetches historical stock price data and technical indicator for a given ticker."""
+def get_stock_prices(stock_ticker: str) -> Union[Dict, str]:
+    """Fetches historical stock price data and technical indicator for a given stock_ticker."""
     try:
         # get stock data from yahoo finance and store them in a dataframe
         data = yf.download(
-            ticker,
+            stock_ticker,
             start=dt.datetime.now() - dt.timedelta(weeks=24*3),
             end=dt.datetime.now(),
             interval='1wk'
@@ -69,11 +73,11 @@ def get_stock_prices(ticker: str) -> Union[Dict, str]:
 
 
 @tool("get_financial_metrics")
-def get_financial_metrics(ticker: str) -> Union[Dict, str]:
-    """Fetches key financial ratios for a given ticker."""
+def get_financial_metrics(stock_ticker: str) -> Union[Dict, str]:
+    """Fetches key financial ratios for a given stock_ticker."""
     try:
         # fetch stock infor from yahoo finance
-        stock = yf.Ticker(ticker)
+        stock = yf.Ticker(stock_ticker)
         info = stock.info
         # return dictionary with selected metrics
         return {

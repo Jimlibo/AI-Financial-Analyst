@@ -9,4 +9,6 @@ from langgraph.graph.message import AnyMessage, add_messages
 class AgentState(TypedDict):
     # list of messages seen by all agents so that they have access to previous outputs
     messages: Annotated[list[AnyMessage], add_messages]
-    stock_name: str
+    # stock ticker (i.e. AAPL, JPM, etc.) and exchange marker (i.e., NYSE)
+    stock_ticker: str
+    stock_exchange: str
