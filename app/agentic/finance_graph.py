@@ -10,7 +10,12 @@ from langgraph.graph import StateGraph, START, END
 
 from app.agentic.states.graph_state import GraphState
 from app.agentic.nodes.llm_node import LLMNode
-from app.agentic.utils.prompts import TECHNICAL_ANALYSIS_PROMPT, SENTIMENT_ANALYSIS_PROMPT, VALUATION_ANALYSIS_PROMPT
+from app.agentic.utils.prompts import (
+    TECHNICAL_ANALYSIS_PROMPT, 
+    SENTIMENT_ANALYSIS_PROMPT, 
+    VALUATION_ANALYSIS_PROMPT,
+    REPORT_WRITING_PROMPT
+)
 from app.agentic.nodes.simple_nodes import (
     get_stock_prices, 
     get_financial_metrics, 

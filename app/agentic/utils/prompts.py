@@ -32,3 +32,15 @@ VALUATION_ANALYSIS_PROMPT = ChatPromptTemplate.from_messages(
         )
     ]
 )
+
+REPORT_WRITING_PROMPT = ChatPromptTemplate.from_messages(
+    [
+        (
+            "system",
+            """
+
+            """
+        ),
+        ("placeholder", "{messages}")
+    ]
+)
