@@ -1,5 +1,5 @@
 """
-File containing assistant class implementations for the agent nodes of the graph
+File containing class implementation for nodes that perform LLM calls
 """
 from langchain_core.runnables import Runnable, RunnableConfig
 from langchain_core.messages import AIMessage

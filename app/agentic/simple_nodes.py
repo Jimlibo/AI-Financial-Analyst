@@ -1,5 +1,5 @@
 """
-File containing tool functions for the different agents in the graph.
+File containing functions that will be used as deterministic nodes in the workflow graph
 """
 import os
 import pandas as pd

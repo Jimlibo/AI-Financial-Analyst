@@ -1,12 +1,12 @@
 """
-File containing the state class implementation for the stateful graph
+File containing the state class implementation for the workflow graph
 """
 from typing import Annotated, TypedDict
 from langgraph.graph.message import AnyMessage, add_messages
 
 
 # State class for the workflow
-class AgentState(TypedDict):
+class GraphState(TypedDict):
     # list of messages seen by all LLMs
     messages: Annotated[list[AnyMessage], add_messages]
 

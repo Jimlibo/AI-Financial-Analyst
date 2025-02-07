@@ -1,3 +1,7 @@
+"""
+File containing utility functions.
+"""
+
 from urllib.request import urlopen
 from bs4 import BeautifulSoup
 
