@@ -23,5 +23,3 @@ def extract_text_from_url(url: str) -> str:
     # drop blank lines and form the final extracted text
     text = '\n'.join(line for line in lines if line)
     return text
-
-extract_text_from_url("https://www.investopedia.com/us-stocks-kind-of-inflated-jamie-dimon-davos-donald-trump-8778439")
