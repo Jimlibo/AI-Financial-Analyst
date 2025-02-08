@@ -5,7 +5,7 @@ from langchain_core.runnables import Runnable, RunnableConfig
 from langchain_core.messages import AIMessage
 from langchain_core.prompts import ChatPromptTemplate
 
-from app.agentic.states.graph_state import GraphState
+from states.graph_state import GraphState
 
 
 class LLMNode:

@@ -12,7 +12,7 @@ from ta.momentum import RSIIndicator, StochasticOscillator
 from ta.trend import MACD
 from ta.volume import volume_weighted_average_price
 
-from app.agentic.utils.utils import extract_text_from_url
+from utils.utils import extract_text_from_url
 
 import serpapi
 from dotenv import load_dotenv
