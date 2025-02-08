@@ -82,7 +82,6 @@ class FinanceGraph():
 
         # Compile graph
         self.graph = builder.compile()
-        self.graph.get_graph().draw_mermaid_png(output_file_path="finance_graph.png")
 
     def run(self):
         pass
