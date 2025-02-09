@@ -4,6 +4,7 @@ File containing class implementation of the workflow graph.
 import os
 import json
 import argparse
+from rich.console import Console
 
 from langchain_openai import ChatOpenAI
 from langchain_huggingface import ChatHuggingFace, HuggingFaceEndpoint
@@ -26,6 +27,8 @@ from nodes.simple_nodes import (
 
 from dotenv import load_dotenv
 load_dotenv()
+
+console = Console()
 
 
 class FinanceGraph():
@@ -117,3 +120,60 @@ class FinanceGraph():
             # if error occured, return the error message along with 0 for 'Failed' code
             return f"An error occured:\n{str(e)}", 0
 
+
+def parse_input():
+    parser = argparse.ArgumentParser(prog="FinanceGraph")
+    parser.add_argument(
+        "-m",
+        "--model",
+        action="store",
+        dest="model",
+        default="Qwen/Qwen2.5-72B-Instruct",
+        required=False,
+        help="Hugging face model repo (default: Qwen/Qwen2.5-72B-Instruct)",
+    )
+    parser.add_argument(
+        "-s",
+        "--stock",
+        action="store",
+        dest="stock",
+        required=True,
+        help="The ticker of the desired stock (i.e. AAPL, GOOG, etc.)",
+    )
+    parser.add_argument(
+        "-e",
+        "--exchange",
+        action="store",
+        dest="exchange",
+        required=True,
+        help="The exchange market of the stock (i.e. NASDAQ, NYSE, etc.)",
+    )
+    parser.add_argument(
+        "--d",
+        "--dest-dir",
+        action="store",
+        required=False,
+        help="Destination directory to which the fetched data will be stored (if not specified, data won't be stored)"
+    )
+    return parser.parse_args()
+
+
+def main(args):
+    # initialize and compile the finance graph
+    fg = FinanceGraph(hf_model=args.model)
+    
+    with console.status("[cyan]Generating report..."):
+        response, success = fg.run(stock_ticker=args.stock, stock_exchange=args.exchange, dest_dir=args.dest_dir)
+
+    # if no error occured, return financial report along with success message in green color
+    if success:
+        console.print("[green bold]Report Generated Successfully!")
+        print(response)
+    else:
+        # if error occurred, return the error message in bold red color
+        console.print(f"[red bold]{response}")
+
+
+if __name__ == "__main__":
+    ARGS = parse_input()
+    main(ARGS)
