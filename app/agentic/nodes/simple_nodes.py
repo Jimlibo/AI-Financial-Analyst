@@ -151,8 +151,8 @@ def combine_stock_data(state: TypedDict) -> TypedDict: # type:ignore
     # convert relevant articles links to text if they exist
     if state.get('news_results', False):
         # convert links to text
-        articles = list(map(lambda x: extract_text_from_url(x), state['news_results']))
+        articles = list(map(lambda x: (x[0], extract_text_from_url(x[1])), state['news_results']))
         # update apporpriate state attribute
         return {"news_results": articles}
-    # else, do not change anything from the state attributes
-    return {}
+    # else, simply return the previous state attributes
+    return {**state}
