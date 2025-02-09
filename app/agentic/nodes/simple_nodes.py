@@ -66,9 +66,11 @@ def get_stock_prices(state: TypedDict) -> TypedDict: # type:ignore
         indicators["volume_weighted_average_price"] = {date.strftime('%Y-%m-%d'): int(value) 
                     for date, value in vwap_series.to_dict().items()}
         
+        # keep only key[0] for keys that were tuples inside the stock price list 
+        stock_price = [{k[0]:v for k,v in item.items()} for item in data.to_dict(orient='records')]
         return {
             'stock_price_indicators': {
-                'stock_price': data.to_dict(orient='records'),
+                'stock_price': stock_price,
                 'indicators': indicators
             }
         }
