@@ -120,8 +120,8 @@ def get_general_financial_info(state: TypedDict) -> TypedDict: # type:ignore
         if results.get('news_results', False):
             articles = []
             # set an upper limit in the number of fetched articles
-            limit = min(len(state['news_results']), 5)
-            for item in state['news_results'][:limit]:
+            limit = min(len(results['news_results']), 5)
+            for item in results['news_results'][:limit]:
                 # if item contains nested articles, pick the first of those artickles
                 if item.get("items", False):
                     # append the title and link of the article
