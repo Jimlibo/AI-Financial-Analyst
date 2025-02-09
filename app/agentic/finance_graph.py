@@ -83,5 +83,37 @@ class FinanceGraph():
         # Compile graph
         self.graph = builder.compile()
 
-    def run(self):
-        pass
+    def run(self, stock_ticker: str, stock_exchange: str, dest_dir: str | None=None) -> tuple[str, int]:
+        """
+        Take as input a stock ticker and the stock exchange market and return
+        a detailed financial report regarding the stock.
+
+        If parameter `dest_dir` is specified, saves the fetched data in the given directory.
+        """
+        try:
+            final_state = self.graph.invoke({
+                "messages": [],
+                "stock_ticker": stock_ticker,
+                "stock_exchange": stock_exchange
+            })
+            
+            if dest_dir is not None:
+                # get all dictionary-like attributes of graph state and save them in a list as tuple (attr_name, attr_value)
+                json_files = [(attr, final_state[attr]) for attr in final_state if type(attr) == dict]
+                # store each of those attributes in its own .json file inside dest_dir
+                for name, content in json_files:
+                    with open(os.path.join(dest_dir, f"{name}.json"), 'w') as f:
+                        json.dump(content, f)
+                
+                # save LLM response contents in .txt files
+                for msg in final_state['messages']:
+                    with open(os.path.join(dest_dir, f"{msg.name}.txt"), 'w') as f:
+                        f.write(msg.content)
+
+            # if everything went smoothly, return final report and 1 to represent 'OK' code
+            return final_state["messages"][-1].content, 1
+
+        except Exception as e:
+            # if error occured, return the error message along with 0 for 'Failed' code
+            return f"An error occured:\n{str(e)}", 0
+
