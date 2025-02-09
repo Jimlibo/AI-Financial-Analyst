@@ -149,7 +149,7 @@ def parse_input():
         help="The exchange market of the stock (i.e. NASDAQ, NYSE, etc.)",
     )
     parser.add_argument(
-        "--d",
+        "-d",
         "--dest-dir",
         action="store",
         required=False,
@@ -161,6 +161,7 @@ def parse_input():
 def main(args):
     # initialize and compile the finance graph
     fg = FinanceGraph(hf_model=args.model)
+    fg.build()
     
     with console.status("[cyan]Generating report..."):
         response, success = fg.run(stock_ticker=args.stock, stock_exchange=args.exchange, dest_dir=args.dest_dir)
