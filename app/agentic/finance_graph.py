@@ -118,7 +118,7 @@ class FinanceGraph():
 
         except Exception as e:
             # if error occured, return the error message along with 0 for 'Failed' code
-            return f"An error occured:\n{str(e)}", 0
+            return f"[ERROR]: {str(e)}", 0
 
 
 def parse_input():
