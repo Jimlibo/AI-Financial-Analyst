@@ -1,8 +1,10 @@
 # AI-Financial-Analyst
 
 ![Python](https://img.shields.io/badge/python-v3.12-blue.svg)
+![YFinance](https://img.shields.io/badge/yfinance-v0.2.52-red.svg)
+![Serpapi](https://img.shields.io/badge/serpapi-v0.1.5-green.svg)
 ![LangChain](https://img.shields.io/badge/langchain-v0.3.22-orange.svg)
-![Langgrap](https://img.shields.io/badge/langgraph-v0.2.56-yellow.svg)
+![LangGraph](https://img.shields.io/badge/langgraph-v0.2.56-yellow.svg)
 
 ## General
 Get a detailed report for a specific stock from a specific exchange, by leveraging the power of LLMs and langgraph.
