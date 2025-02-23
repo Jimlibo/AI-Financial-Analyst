@@ -35,9 +35,10 @@ command:
 python app/agentic/finance_graph.py --stock <your stock> --exchange <exchange market of the stock>
 ```
 
-In the previous command, you can specify three possible CLI parameters:
+In the previous command, you can specify four possible CLI parameters:
 * <b>--stock</b>: the stock ticker (i.e. AAPL, GOOGL, JPM, etc.)
 * <b>--exchange</b>: the market where the stock is exchanged (i.e. NYSE, NASDAQ, etc.)
+* <b>[--model]</b>: an optional parameter, specifying the HuggingFace repo-id of the LLM (default: Qwen/Qwen2.5-72B-Instruct)
 * <b>[--dest-dir]</b>: an optional parameter, specifying the directory where fetched data will be stored
 
 For example, to get a financial report on Apple's stock you have to run the following:
