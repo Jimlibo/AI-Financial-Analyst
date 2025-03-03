@@ -10,9 +10,9 @@
 Get a detailed report for a specific stock from a specific exchange, by leveraging the power of LLMs and langgraph.
 
 ## Future Steps
-- [ ] add support for different LLM servings
-    - [ ] add support for Ollama
-    - [ ] add support for llama.cpp
+- [x] add support for different LLM servings
+    - [x] add support for Ollama
+    - [x] add support for llama.cpp
 - [ ] add UI
     - [ ] add home page where stock and exchange are specified
     - [ ] add visualization pages with graphs regarding fetched data
