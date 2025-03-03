@@ -5,13 +5,13 @@ import os
 import json
 import argparse
 from rich.console import Console
+from typing import Literal
 
-from langchain_openai import ChatOpenAI
-from langchain_huggingface import ChatHuggingFace, HuggingFaceEndpoint
 from langgraph.graph import StateGraph, START, END
 
 from states.graph_state import GraphState
 from nodes.llm_node import LLMNode
+from utils.utils import llm_endpoint
 from utils.prompts import (
     TECHNICAL_ANALYSIS_PROMPT, 
     SENTIMENT_ANALYSIS_PROMPT, 
@@ -37,14 +37,29 @@ class FinanceGraph():
     report regarding a given stock. The report features price data, financial
     metrics and indicators as well as relevant articles.
     """
-    def __init__(self, hf_model: str | None=None):
-        # initialize LLM from Huggingface
-        hf_endpoint = HuggingFaceEndpoint(
-            repo_id=hf_model if hf_model is not None else "Qwen/Qwen2.5-72B-Instruct",
-            task="text-generation",
-            huggingfacehub_api_token=os.getenv("HUGGINGFACEHUB_API_TOKEN")
-        )
-        self.llm = ChatHuggingFace(llm=hf_endpoint)
+    def __init__(self, type: Literal["hugging-face", "ollama", "llama-cpp"]="hugging-face",
+                model_name: str | None=None, url: str | None=None, model_path: str | None=None,
+                config_file: str | None=None):
+        # first option: use a configuration file for llm initialization
+        if config_file is not None:
+            if os.path.exists(config_file):
+                with open(config_file, 'r') as f:
+                    config = json.load(f)
+            else:
+                raise FileNotFoundError(f"File '{config_file}' does not exist!")
+        
+        # second option: get the necessary configuration from parameters
+        else:
+            # construct the configuration using defaults when argument is not specified
+            config = {
+                "model_path": model_path if model_path is not None else ""
+            }
+            if model_name is not None:
+                config["model_name"] = model_name
+            if url is not None:
+                config["url"] = url
+
+        self.llm = llm_endpoint(type=type, config=config)
         self.graph = None
 
     def build(self):
@@ -124,13 +139,42 @@ class FinanceGraph():
 def parse_input():
     parser = argparse.ArgumentParser(prog="FinanceGraph")
     parser.add_argument(
-        "-m",
-        "--model",
+        "--serving-type",
         action="store",
-        dest="model",
-        default="Qwen/Qwen2.5-72B-Instruct",
+        dest="serving_type",
+        choices=["ollama", "hugging-face", "llama-cpp"],
+        required=True,
+        help="LLM serving method",
+    )
+    parser.add_argument(
+        "-m",
+        "--model-name",
+        action="store",
+        dest="model_name",
         required=False,
-        help="Hugging face model repo (default: Qwen/Qwen2.5-72B-Instruct)",
+        help="LLM that will be used (when using llama.cpp for model serving, this argument is ignored)",
+    )
+    parser.add_argument(
+        "--model-path",
+        action="store",
+        dest="model_path",
+        required=False,
+        help="Path of the llama.cpp model file (specify only when using llama.cpp for model serving)",
+    )
+    parser.add_argument(
+        "--url",
+        action="store",
+        dest="url",
+        required=False,
+        help="Ollama ulr (specify only when using Ollama for model serving)",
+    )
+    parser.add_argument(
+        "-c",
+        "--config-file",
+        action="store",
+        dest="config_file",
+        required=False,
+        help="Configuration (.json) file  with the necessary initialization arguments of LLM interface",
     )
     parser.add_argument(
         "-s",
@@ -160,20 +204,28 @@ def parse_input():
 
 def main(args):
     # initialize and compile the finance graph
-    fg = FinanceGraph(hf_model=args.model)
-    fg.build()
-    
-    with console.status("[cyan]Generating report..."):
-        response, success = fg.run(stock_ticker=args.stock, stock_exchange=args.exchange, dest_dir=args.dest_dir)
+    try:
+        fg = FinanceGraph(
+            type=args.serving_type,
+            model_name=args.model_name, 
+            url=args.url, 
+            model_path=args.model_path,
+            config_file=args.config_file
+        )
+        fg.build()
+        
+        with console.status("[cyan]Generating report..."):
+            response, success = fg.run(stock_ticker=args.stock, stock_exchange=args.exchange, dest_dir=args.dest_dir)
 
-    # if no error occured, return financial report along with success message in green color
-    if success:
-        console.print("[green bold]Report Generated Successfully!")
-        print(response)
-    else:
-        # if error occurred, return the error message in bold red color
-        console.print(f"[red bold]{response}")
-
+        # if no error occured, return financial report along with success message in green color
+        if success:
+            console.print("[green bold]Report Generated Successfully!")
+            print(response)
+        else:
+            # if error occurred, return the error message in bold red color
+            console.print(f"[red bold]{response}")
+    except Exception as e:
+        console.print(f"[red bold][ERROR]:{e}")
 
 if __name__ == "__main__":
     ARGS = parse_input()
