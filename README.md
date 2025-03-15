@@ -32,18 +32,27 @@ pip install -r app/requirements.txt
 After installing all necessary packages, you can get a detailed financial report for your desired stock, by running the 
 command:
 ```bash
-python app/agentic/finance_graph.py --stock <your stock> --exchange <exchange market of the stock>
+python app/agentic/finance_graph.py --serving-type <the LLM service used> --stock <your stock> --exchange <exchange market of the stock>
 ```
 
 In the previous command, you can specify four possible CLI parameters:
+* <b>--serving-type</b>: the service that runs the LLMs (it can be one of 'ollama', 'hugging-face' or 'llama-cpp')
 * <b>--stock</b>: the stock ticker (i.e. AAPL, GOOGL, JPM, etc.)
 * <b>--exchange</b>: the market where the stock is exchanged (i.e. NYSE, NASDAQ, etc.)
-* <b>[--model]</b>: an optional parameter, specifying the HuggingFace repo-id of the LLM (default: Qwen/Qwen2.5-72B-Instruct)
+* <b>[--model-name]</b>: an optional parameter, specifying the LLM that will be used
+* <b>[--model-path]</b>: an optional parameter, specifying the filepath of the llama.cpp binary that contains the LLM
+* <b>[--url]</b>: an optional parameter specifying the url of the Ollama service (default is http://localhost:11434)
+* <b>[--config-file]</b>: an optional parameter specifying a .json file containing necessary LLM parameters (url, model_name, model_path)
 * <b>[--dest-dir]</b>: an optional parameter, specifying the directory where fetched data will be stored
 
-For example, to get a financial report on Apple's stock you have to run the following:
+For example, to get a financial report on Apple's stock, using the default hugging face models you have to run the following:
 ```bash
-python app/agentic/finance_graph.py --stock AAPL --exchange NASDAQ --dest-dir ~/apple_stock_data
+python app/agentic/finance_graph.py --serving-type "hugging-face" --stock AAPL --exchange NASDAQ --dest-dir ~/apple_stock_data
+```
+
+To get a detailed description of each possible CLI parameter, you can use the <i>--help</i> option:
+```bash
+python app/agentic/finance_graph.py --help
 ```
 
 
