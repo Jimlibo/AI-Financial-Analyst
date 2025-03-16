@@ -116,6 +116,10 @@ class FinanceGraph():
             })
             
             if dest_dir is not None:
+                # create destination directory if it does not already exist
+                if not os.path.exists(dest_dir):
+                    os.makedirs(dest_dir)
+
                 # get all dictionary-like attributes of graph state and save them in a list as tuple (attr_name, attr_value)
                 json_files = [(attr, final_state[attr]) for attr in final_state if type(attr) == dict]
                 # store each of those attributes in its own .json file inside dest_dir
@@ -132,6 +136,7 @@ class FinanceGraph():
             return final_state["messages"][-1].content, 1
 
         except Exception as e:
+            raise e
             # if error occured, return the error message along with 0 for 'Failed' code
             return f"[ERROR]: {str(e)}", 0
 
@@ -204,28 +209,28 @@ def parse_input():
 
 def main(args):
     # initialize and compile the finance graph
-    try:
-        fg = FinanceGraph(
-            type=args.serving_type,
-            model_name=args.model_name, 
-            url=args.url, 
-            model_path=args.model_path,
-            config_file=args.config_file
-        )
-        fg.build()
-        
-        with console.status("[cyan]Generating report..."):
-            response, success = fg.run(stock_ticker=args.stock, stock_exchange=args.exchange, dest_dir=args.dest_dir)
+    # try:
+    fg = FinanceGraph(
+        type=args.serving_type,
+        model_name=args.model_name, 
+        url=args.url, 
+        model_path=args.model_path,
+        config_file=args.config_file
+    )
+    fg.build()
+    
+    with console.status("[cyan]Generating report..."):
+        response, success = fg.run(stock_ticker=args.stock, stock_exchange=args.exchange, dest_dir=args.dest_dir)
 
-        # if no error occured, return financial report along with success message in green color
-        if success:
-            console.print("[green bold]Report Generated Successfully!")
-            print(response)
-        else:
-            # if error occurred, return the error message in bold red color
-            console.print(f"[red bold]{response}")
-    except Exception as e:
-        console.print(f"[red bold][ERROR]:{e}")
+    # if no error occured, return financial report along with success message in green color
+    if success:
+        console.print("[green bold]Report Generated Successfully!")
+        print(response)
+    else:
+        # if error occurred, return the error message in bold red color
+        console.print(f"[red bold]{response}")
+    # except Exception as e:
+        # console.print(f"[red bold][ERROR]:{e}")
 
 if __name__ == "__main__":
     ARGS = parse_input()
